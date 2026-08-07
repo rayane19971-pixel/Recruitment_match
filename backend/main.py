@@ -104,6 +104,7 @@ def search_players(
     pace: int = Query(50, ge=0, le=100, description="Niveau de Vitesse (0-100)"),
     defending: int = Query(50, ge=0, le=100, description="Niveau de Défense (0-100)"),
     physical: int = Query(50, ge=0, le=100, description="Niveau Physique / Endurance (0-100)"),
+    query: str = Query(None, description="Nom ou recherche partielle de joueur"),
     
     current_user: dict = Depends(get_current_user)
 ):
@@ -122,8 +123,10 @@ def search_players(
         target_passing=passing,
         target_pace=pace,
         target_defending=defending,
-        target_physical=physical
+        target_physical=physical,
+        name_query=query
     )
+
     # Ajout explicite du pourcentage de compatibilité et masquage selon rôle
     for p in players:
         p["score_compatibilite"] = f"{p['match_score']}%"

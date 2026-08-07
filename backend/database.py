@@ -95,11 +95,13 @@ def search_players_matching(
     target_passing: int = 50,
     target_pace: int = 50,
     target_defending: int = 50,
-    target_physical: int = 50
+    target_physical: int = 50,
+    name_query: str = None
 ):
     """
     Recherche et calcule le score de compatibilité (%) entre le profil recherché 
     et les statistiques Opta réelles de chaque joueur.
+    Permet également la recherche directe par nom de joueur (ex: 'Cherki', 'Mbappé').
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -108,6 +110,9 @@ def search_players_matching(
     query = "SELECT * FROM players WHERE 1=1"
     params = []
     
+    if name_query and name_query.strip():
+        query += " AND name LIKE ?"
+        params.append(f"%{name_query.strip()}%")
     if position and position != "Tous":
         query += " AND position = ?"
         params.append(position)
@@ -127,6 +132,7 @@ def search_players_matching(
     cursor.execute(query, params)
     players = cursor.fetchall()
     conn.close()
+
     
     results = []
     for player in players:

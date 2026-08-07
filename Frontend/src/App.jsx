@@ -3,8 +3,10 @@ import LoginModal from './components/LoginModal';
 import PlayerRadarModal from './components/PlayerRadarModal';
 import BudgetDashboard from './components/BudgetDashboard';
 import ScoutingFilters from './components/ScoutingFilters';
+import PlayerSearchBar from './components/PlayerSearchBar';
 
 export default function App() {
+
   const [token, setToken] = useState(localStorage.getItem('ol_jwt_token') || '');
   const [role, setRole] = useState(localStorage.getItem('ol_user_role') || '');
   const [username, setUsername] = useState(localStorage.getItem('ol_username') || '');
@@ -141,7 +143,11 @@ export default function App() {
 
             {/* GRILLE DES RÉSULTATS JOUEURS */}
             <div>
+              {/* BARRE DE RECHERCHE DIRECTE PAR NOM DE JOUEUR */}
+              <PlayerSearchBar token={token} onSelectPlayer={(p) => setSelectedPlayer(p)} />
+
               <div className="results-header">
+
                 <div>
                   <h2 style={{ fontSize: '1.3rem', fontWeight: 800 }}>Joueurs Compatibles (17,660 Vrais Joueurs)</h2>
                   <p className="results-count">Triés par ordre décroissant de compatibilité (%)</p>
