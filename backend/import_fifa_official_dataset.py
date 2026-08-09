@@ -85,35 +85,49 @@ def import_fifa_official_csv():
                 
             contract_expires = parse_contract_year(row.get('Contract Valid Until', '2026'))
             
-            # Ajustement des percentiles Opta selon l'Overall réel FIFA et la spécialité par poste
+            potential = int(float(row.get('Potential', overall)))
+            skill_moves = int(float(row.get('Skill Moves', 2)))
+            reputation = int(float(row.get('International Reputation', 1)))
+            
+            # Variation unique propre à chaque joueur basée sur un hash déterministe de son nom
+            h = abs(hash(name))
+            v_fin = (h % 9) - 4
+            v_dri = ((h // 10) % 9) - 4
+            v_pas = ((h // 100) % 9) - 4
+            v_pac = ((h // 1000) % 9) - 4
+            v_def = ((h // 10000) % 9) - 4
+            v_phy = ((h // 100000) % 9) - 4
+
+            # Ajustement des percentiles Opta selon l'Overall réel FIFA, le Potentiel et la spécialité par poste
             if position == "Attaquant":
-                finishing = min(99, max(30, overall + 5))
-                dribbling = min(99, max(30, overall + 2))
-                passing = min(99, max(30, overall - 5))
-                pace = min(99, max(30, overall + 4))
-                defending = min(99, max(20, overall - 25))
-                physical = min(99, max(30, overall - 2))
+                finishing = min(99, max(30, overall + 5 + v_fin + (skill_moves * 2)))
+                dribbling = min(99, max(30, overall + 2 + v_dri + (skill_moves * 2)))
+                passing = min(99, max(30, overall - 5 + v_pas + (reputation * 2)))
+                pace = min(99, max(30, overall + 4 + v_pac))
+                defending = min(99, max(20, overall - 25 + v_def))
+                physical = min(99, max(30, overall - 2 + v_phy))
             elif position == "Milieu":
-                finishing = min(99, max(30, overall - 5))
-                dribbling = min(99, max(30, overall + 3))
-                passing = min(99, max(30, overall + 6))
-                pace = min(99, max(30, overall - 2))
-                defending = min(99, max(30, overall - 5))
-                physical = min(99, max(30, overall))
+                finishing = min(99, max(30, overall - 5 + v_fin))
+                dribbling = min(99, max(30, overall + 3 + v_dri + skill_moves))
+                passing = min(99, max(30, overall + 6 + v_pas + reputation))
+                pace = min(99, max(30, overall - 2 + v_pac))
+                defending = min(99, max(30, overall - 5 + v_def))
+                physical = min(99, max(30, overall + v_phy))
             elif position == "Défenseur":
-                finishing = min(99, max(20, overall - 20))
-                dribbling = min(99, max(30, overall - 10))
-                passing = min(99, max(30, overall - 5))
-                pace = min(99, max(30, overall - 2))
-                defending = min(99, max(30, overall + 8))
-                physical = min(99, max(30, overall + 6))
+                finishing = min(99, max(20, overall - 20 + v_fin))
+                dribbling = min(99, max(30, overall - 10 + v_dri))
+                passing = min(99, max(30, overall - 5 + v_pas))
+                pace = min(99, max(30, overall - 2 + v_pac))
+                defending = min(99, max(30, overall + 8 + v_def))
+                physical = min(99, max(30, overall + 6 + v_phy))
             else:  # Gardien
                 finishing = 15
                 dribbling = 20
-                passing = min(99, max(30, overall - 15))
+                passing = min(99, max(30, overall - 15 + v_pas))
                 pace = 50
-                defending = min(99, max(30, overall + 10))
-                physical = min(99, max(30, overall + 5))
+                defending = min(99, max(30, overall + 10 + v_def))
+                physical = min(99, max(30, overall + 5 + v_phy))
+
                 
             batch.append((
                 name, club, league, position, age, nationality, market_value, wage, contract_expires,
