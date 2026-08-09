@@ -147,9 +147,8 @@ export default function App() {
               <PlayerSearchBar token={token} onSelectPlayer={(p) => setSelectedPlayer(p)} />
 
               <div className="results-header">
-
                 <div>
-                  <h2 style={{ fontSize: '1.3rem', fontWeight: 800 }}>Joueurs Compatibles (17,660 Vrais Joueurs)</h2>
+                  <h2 style={{ fontSize: '1.3rem', fontWeight: 800 }}>Joueurs Compatibles (2,854 Joueurs Opta 2024-2025)</h2>
                   <p className="results-count">Triés par ordre décroissant de compatibilité (%)</p>
                 </div>
                 <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 700 }}>
