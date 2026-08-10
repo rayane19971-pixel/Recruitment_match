@@ -4,6 +4,7 @@ import PlayerRadarModal from './components/PlayerRadarModal';
 import BudgetDashboard from './components/BudgetDashboard';
 import ScoutingFilters from './components/ScoutingFilters';
 import PlayerSearchBar from './components/PlayerSearchBar';
+import ALL_PLAYERS from './data/players_dataset.json';
 
 export default function App() {
 
@@ -34,13 +35,16 @@ export default function App() {
     localStorage.removeItem('ol_username');
   };
 
-  // Fonction de recherche déclenchée de manière isolée
+  // Fonction de recherche (API Backend local avec fallback client-side immédiat)
   const handleSearch = (filters) => {
     if (!token) return;
     setLoading(true);
 
     let url = `http://127.0.0.1:8000/players/search?finishing=${filters.finishing}&dribbling=${filters.dribbling}&passing=${filters.passing}&pace=${filters.pace}&defending=${filters.defending}&physical=${filters.physical}&max_age=${filters.maxAge}&max_contract_year=${filters.maxContractYear}`;
     
+    if (filters.maxMarketValue && filters.maxMarketValue < 200) {
+      url += `&max_market_value=${filters.maxMarketValue * 1000000}`;
+    }
     if (filters.position !== 'Tous') {
       url += `&position=${encodeURIComponent(filters.position)}`;
     }
@@ -51,10 +55,7 @@ export default function App() {
       }
     })
       .then(res => {
-        if (res.status === 401) {
-          handleLogout();
-          throw new Error("Session expirée");
-        }
+        if (!res.ok) throw new Error("API non disponible");
         return res.json();
       })
       .then(data => {
@@ -64,7 +65,40 @@ export default function App() {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Erreur Fetch:", err);
+        // Mode Fallback Client-side si le serveur Python local n'est pas démarré
+        console.warn("API Python locale absente, calcul du matching côté client sur les 2,854 joueurs Opta");
+        
+        let filtered = ALL_PLAYERS.filter(p => {
+          if (filters.position !== 'Tous' && p.position !== filters.position) return false;
+          if (p.age > filters.maxAge) return false;
+          if (p.contract_expires > filters.maxContractYear) return false;
+          if (filters.maxMarketValue && filters.maxMarketValue < 200 && typeof p.market_value === 'number' && p.market_value > (filters.maxMarketValue * 1000000)) return false;
+          return true;
+        });
+
+        filtered = filtered.map(p => {
+          const diffSq = (
+            Math.pow(p.stat_finishing - filters.finishing, 2) +
+            Math.pow(p.stat_dribbling - filters.dribbling, 2) +
+            Math.pow(p.stat_passing - filters.passing, 2) +
+            Math.pow(p.stat_pace - filters.pace, 2) +
+            Math.pow(p.stat_defending - filters.defending, 2) +
+            Math.pow(p.stat_physical - filters.physical, 2)
+          );
+          const distance = Math.sqrt(diffSq / 6);
+          const matchScore = Math.round(Math.max(0, 100 - distance) * 10) / 10;
+          
+          const copy = { ...p, match_score: matchScore, score_compatibilite: `${matchScore}%` };
+          
+          if (role === 'scout') {
+            copy.market_value = "Confidentiel (Réservé Direction)";
+            copy.wage = "Confidentiel (Réservé Direction)";
+          }
+          return copy;
+        });
+
+        filtered.sort((a, b) => b.match_score - a.match_score);
+        setPlayers(filtered.slice(0, 100));
         setLoading(false);
       });
   };
