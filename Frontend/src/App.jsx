@@ -176,7 +176,7 @@ export default function App() {
       {/* MAIN CONTENT */}
       <main className="main-content">
         {activeTab === 'effectif' ? (
-          <OLEffectifDashboard token={token} role={role} />
+          <OLEffectifDashboard token={token} role={role} onSelectPlayer={(p) => setSelectedPlayer(p)} />
         ) : activeTab === 'budget' ? (
           <BudgetDashboard token={token} role={role} />
         ) : (
