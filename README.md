@@ -1,79 +1,47 @@
-# Recruitment Match - Olympique Lyonnais 🔴🔵
+# Projet Scouting OL - Rayane Ourad
 
-Application web de scouting et d'aide au recrutement réalisée dans le cadre du projet d'évaluation Bachelor 3 DBI (2025-2026).
+Projet réalisé dans le cadre du Bachelor 3 DBI (2025-2026).
 
-L'objectif de l'application est d'assister la cellule de recrutement et la direction sportive de l'Olympique Lyonnais dans la détection de profils compatibles, l'analyse comparative de performances (données Opta) et la simulation budgétaire du mercato.
+C'est une application web de recrutement développée pour la cellule de scouting de l'Olympique Lyonnais. Elle permet de filtrer des joueurs selon plusieurs critères, d'analyser leurs performances avec des graphiques en radar et de trouver des profils similaires grâce à un algorithme k-NN.
 
----
+## Organisation du projet
 
-## 🛠️ Stack Technique
+- `backend/` : API FastAPI en Python, base de données SQLite (`recruitment_app.db`) et algorithme k-NN.
+- `Frontend/` : Interface web en React (Vite) avec du CSS sur mesure.
 
-### Backend (Python & FastAPI)
-- **FastAPI** : API REST pour la recherche, l'authentification et le calcul de similarité.
-- **SQLite** : Base de données relationnelle locale (`recruitment_app.db`).
-- **Passlib & PyJWT** : Gestion des jetons d'accès et sécurité RBAC (Role-Based Access Control).
-- **scikit-learn & pandas** : Algorithme des k plus proches voisins (k-NN) et calculs de distance euclidienne pondérée.
+## Comment démarrer le projet
 
-### Frontend (React & Vite)
-- **React** (avec Hooks `useState`, `useEffect`) : Interface utilisateur réactive.
-- **Vanilla CSS** : Design personnalisé sombre (style glassmorphism).
-- **Canvas HTML5 / SVG** : Graphiques radars interactifs à 6 axes (Finition, Dribble, Passes, Vitesse, Défense, Physique).
-
----
-
-## 🔑 Rôles & Authentification (RBAC)
-
-L'application intègre 3 niveaux d'accès distincts :
-
-1. **Recruteur (Scout)** : 
-   - Recherche multicritère de joueurs.
-   - Visualisation des radars de performance et recherche de jumeaux statistiques (k-NN).
-   - *Données financières confidentielles masquées.*
-
-2. **Directeur Sportif** :
-   - Accès complet aux fiches joueurs avec valeurs de marché et salaires.
-   - Espace **Budget Mercato** : suivi de l'enveloppe globale de transfert (45 M€) et de la masse salariale.
-   - Simulateur d'impact financier d'un recrutement en temps réel.
-
-3. **Administrateur** :
-   - Accès global et gestion des permissions.
-
----
-
-## 🚀 Installation & Lancement en local
-
-### 1. Cloner le projet
+### 1. Récupérer le projet
 ```bash
 git clone https://github.com/L3-WEB-2026/web-rayane-ourad.git
 cd web-rayane-ourad
 ```
 
-### 2. Lancer le Backend (Python FastAPI)
+### 2. Lancer le backend
 ```bash
 cd backend
 pip install -r requirements.txt
 python main.py
 ```
-Le serveur démarre sur `http://127.0.0.1:8000`.
+L'API tourne sur `http://127.0.0.1:8000`.
 
-### 3. Lancer le Frontend (React)
+### 3. Lancer le frontend
+Dans un nouveau terminal :
 ```bash
-cd ../Frontend
+cd Frontend
 npm install
 npm run dev
 ```
-L'application est accessible sur `http://localhost:5173`.
+L'application s'ouvre sur `http://localhost:5173`.
 
----
+## Ce que fait l'application
 
-## 📊 Jeu de données
+- **Recherche & Filtres** : par nom, poste, âge, valeur marchande max et note globale.
+- **Fiches Joueurs & Radars** : graphique à 6 axes (Finition, Dribble, Passes, Vitesse, Défense, Physique).
+- **Jumeaux statistiques (KNN)** : affichage des 4 joueurs les plus proches sur le plan statistique et du standing.
+- **Accès par rôle (RBAC)** :
+  - `scout1` : accès aux stats sportives (valeurs financières masquées).
+  - `directeur` / `rayane` : accès complet avec gestion du budget mercato (45 M€) et simulateur de salaire.
 
-La base de données contient **2 854 joueurs professionnels** issus des championnats européens majeurs, enrichis de leurs statistiques réelles de la saison 2024-2025 (données brutes Opta / FBref) :
-- Vrais âges et nationalités à jour.
-- Statistiques de performance calibrées sur 90 minutes.
-- Valeurs de marché réelles et fin de contrats.
-
----
-
-## 👥 Auteur
-Projet réalisé par **Rayane Ourad** — Bachelor 3 Data & Business Intelligence.
+## Données utilisées
+Base contenant 2 854 joueurs professionnels des 5 grands championnats (saison 2024-2025).
