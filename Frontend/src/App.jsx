@@ -4,6 +4,7 @@ import PlayerRadarModal from './components/PlayerRadarModal';
 import BudgetDashboard from './components/BudgetDashboard';
 import ScoutingFilters from './components/ScoutingFilters';
 import PlayerSearchBar from './components/PlayerSearchBar';
+import OLEffectifDashboard from './components/OLEffectifDashboard';
 import ALL_PLAYERS from './data/players_dataset.json';
 
 export default function App() {
@@ -145,7 +146,13 @@ export default function App() {
             className={`nav-btn ${activeTab === 'scouting' ? 'active' : ''}`}
             onClick={() => setActiveTab('scouting')}
           >
-            🎛️ Scouting & Matching Opta
+            🎛️ Scouting & Matching
+          </button>
+          <button 
+            className={`nav-btn ${activeTab === 'effectif' ? 'active' : ''}`}
+            onClick={() => setActiveTab('effectif')}
+          >
+            🦁 Effectif OL & Comparateur
           </button>
           <button 
             className={`nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
@@ -168,7 +175,9 @@ export default function App() {
 
       {/* MAIN CONTENT */}
       <main className="main-content">
-        {activeTab === 'budget' ? (
+        {activeTab === 'effectif' ? (
+          <OLEffectifDashboard token={token} role={role} />
+        ) : activeTab === 'budget' ? (
           <BudgetDashboard token={token} role={role} />
         ) : (
           <div className="scouting-grid">
