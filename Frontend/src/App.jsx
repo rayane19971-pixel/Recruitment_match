@@ -74,14 +74,14 @@ export default function App() {
     if (token) {
       handleSearch({
         position: 'Tous',
-        maxAge: 30,
+        maxAge: 40,
         maxContractYear: 2030,
-        finishing: 70,
-        dribbling: 70,
-        passing: 70,
-        pace: 75,
-        defending: 50,
-        physical: 65
+        finishing: 40,
+        dribbling: 40,
+        passing: 40,
+        pace: 40,
+        defending: 30,
+        physical: 40
       });
     }
   }, [token]);
