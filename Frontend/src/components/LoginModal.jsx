@@ -54,12 +54,11 @@ export default function LoginModal({ onLoginSuccess }) {
   return (
     <div className="glass-card login-box">
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <div 
-          className="ol-badge-logo" 
-          style={{ width: '64px', height: '64px', margin: '0 auto 1rem auto', fontSize: '1.5rem' }}
-        >
-          OL
-        </div>
+        <img 
+          src="/ol_logo.png" 
+          alt="OL Logo" 
+          style={{ display: 'block', width: '80px', height: '90px', margin: '0 auto 1rem auto', objectFit: 'contain' }} 
+        />
         <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>RECRUITMENT MATCH OL 🔴🔵</h2>
         <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '4px' }}>
           Plateforme Data Intelligence & Scouting Olympique Lyonnais
