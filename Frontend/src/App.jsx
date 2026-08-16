@@ -134,7 +134,7 @@ export default function App() {
       {/* NAVBAR */}
       <header className="navbar">
         <div className="brand-section">
-          <img src="/ol_logo.png" alt="OL Logo" style={{ width: '50px', height: '55px', marginRight: '15px', borderRadius: '5px' }} />
+          <img src="https://upload.wikimedia.org/wikipedia/fr/b/b2/Olympique_lyonnais_%28logo_2022%29.svg" alt="OL Logo" style={{ width: '50px', height: '50px', marginRight: '15px' }} />
           <div className="brand-title">
             RECRUITMENT MATCH
             <span className="brand-subtitle">Olympique Lyonnais • Data Intelligence</span>
