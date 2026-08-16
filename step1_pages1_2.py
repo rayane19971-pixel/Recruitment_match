@@ -43,6 +43,12 @@ class NexaPurpleHeaderCanvas(canvas.Canvas):
         
         # IMAGE EMBARQUÉE DU LOGO OFFICIEL NEXA DIGITAL SCHOOL (#6f2f9f)
         logo_path = r"C:\Users\user\OneDrive\Documents\web-rayane-ourad-main\nexa_logo.png"
+        ol_logo_path = r"C:\Users\user\OneDrive\Documents\web-rayane-ourad-main\ol_logo.png"
+        
+        # Logo OL
+        if os.path.exists(ol_logo_path):
+            self.drawImage(ol_logo_path, 395, 786, width=45, height=45, mask='auto')
+            
         if os.path.exists(logo_path):
             self.drawImage(logo_path, 445, 786, width=120, height=50, mask='auto')
         else:
