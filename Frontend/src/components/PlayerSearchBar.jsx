@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ALL_PLAYERS from '../data/players_dataset.json';
 
 export default function PlayerSearchBar({ token, onSelectPlayer }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,14 +19,23 @@ export default function PlayerSearchBar({ token, onSelectPlayer }) {
           'Authorization': `Bearer ${token}`
         }
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("API non disponible");
+          return res.json();
+        })
         .then(data => {
           if (data && data.joueurs) {
             setSuggestions(data.joueurs);
             setIsOpen(true);
           }
         })
-        .catch(err => console.error("Erreur Recherche Nom:", err));
+        .catch(err => {
+          console.warn("API Python locale absente, recherche par nom côté client (Fallback)");
+          const term = searchTerm.toLowerCase();
+          const filtered = ALL_PLAYERS.filter(p => p.name.toLowerCase().includes(term));
+          setSuggestions(filtered.slice(0, 15));
+          setIsOpen(true);
+        });
     }, 200);
 
     return () => clearTimeout(timer);
