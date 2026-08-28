@@ -112,6 +112,22 @@ export default function PlayerRadarModal({ player, token, role, onClose, onSelec
                 : <span className="confidential-tag">Confidentiel (Réservé Direction)</span>}
             </strong>
           </div>
+
+          {!isScout && typeof player.market_value === 'number' && (
+            <div className="meta-item" style={{ gridColumn: 'span 2', padding: '0.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '6px' }}>
+                <span>Impact Budget Transferts (45M€)</span>
+                <strong style={{ color: 'white' }}>{((player.market_value / 45000000) * 100).toFixed(1)}%</strong>
+              </div>
+              <div style={{ width: '100%', height: '6px', background: '#1e293b', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  height: '100%', 
+                  background: (player.market_value / 45000000) > 0.6 ? '#ef4444' : (player.market_value / 45000000) > 0.3 ? '#f59e0b' : '#10b981',
+                  width: `${Math.min((player.market_value / 45000000) * 100, 100)}%`
+                }}></div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* KNN SIMILAR PLAYERS (JUMEAUX STATISTIQUES) */}
